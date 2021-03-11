@@ -1,35 +1,55 @@
+//12.03.2021 Пушка специи. При участии Егора Викторовича
 #include <Arduino.h>
 
 
 
 #include "ServoLf20.h"
-#include "keyInputFreq.h"
+#include "keyInputFreq.h" // Дебаг покрутить сервой. Ввод с клавиатуры
+#include "StartButton.h"
 
 
-volatile boolean actionState = LOW;
-void myEventListener();
 
+enum EModes{ // Cписок режимов
+    SINGL = 1,
+    AUTO = 2,
+    REFILL = 3
+} ;
 
-class StartButton{
+#include "TumblerModes.h"
+
+#include "PnevmoKlapan.h"
+
+class LogicAction{
 private:
-
-  #define PIN_LED 13
-  bool buttonPressed = false;
+    TumblerModes tumblerMode;
+    StartButton startButton;
+    ServoLf20 servoLf20;
+    PnevmoKlapan Klapan;
 public:
-  StartButton(){
-      pinMode(2, INPUT_PULLUP);
-      pinMode(PIN_LED, OUTPUT);
-      attachInterrupt(0, myEventListener, LOW);
-  }
-  void ButtonRead(){
-    if(actionState == HIGH){
-        buttonPressed = HIGH;
-        digitalWrite(PIN_LED, buttonPressed);
-    }
-  }
+    void Game(){
+        if(tumblerMode.GetModeEnded() == true){ //Если прошлый режим завершился
+            tumblerMode.ReadTumblerModes(); //Читаем тумблер режима
+        }
+            if(tumblerMode.GetCurrentMode() == SINGL){//Если тумбрер в положении Singl Shoot
+                if(startButton.ButtonRead() == true){   tumblerMode.SetModeEnded(false);
+                    
 
+                    if(servoLf20.Moove60Degrees(260)==true and Klapan.KlapanOpenSingl(400)==true){
+                        startButton.RebootButtonRead();
+
+                        servoLf20.Moove60DegreesReset();  Klapan.KlapanOpenResetSingl();
+                        
+                        tumblerMode.SetModeEnded(true);
+                    }
+                
+            }
+        }
+       
+        //startButton.ButtonRead();
+
+    }
 };
-StartButton* MyStartButtonPtr = nullptr; // Cоздали указатель
+LogicAction* MyLogicActionPtr = nullptr; // Cоздали указатель
 
 void setup() {
   // put your setup code here, to run once:
@@ -39,23 +59,19 @@ void setup() {
   }
   
 
-  
-
-  
-  
-  MyStartButtonPtr  = new StartButton();
-  MyServoLf20Ptr = new ServoLf20(); // Создали обьект в области оперативной памяти куча heap
+  //MyStartButtonPtr  = new StartButton();
+  //MyServoLf20Ptr    = new ServoLf20(); // Создали обьект в области оперативной памяти куча heap
+  //MyKlapanPtr       = new PnevmoKlapan();
+  //MyTumblerModesPtr = new TumblerModes();
+  MyLogicActionPtr = new LogicAction();
 }
 
 
 void loop() {
   // put your main code here, to run repeatedly:
-  keyInputFreq();
-  MyStartButtonPtr->ButtonRead();
+  //keyInputFreq();
+  //MyStartButtonPtr->ButtonRead();
+  //Serial.println(analogRead(A0) );
+  MyLogicActionPtr->Game();
 }
 
-void myEventListener() {
-  actionState = HIGH; //
-  // Выполняем другие действия, например, включаем или выключаем светодиод
-  
-}
