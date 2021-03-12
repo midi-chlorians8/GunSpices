@@ -7,7 +7,7 @@
 class ServoLf20{
     private:
     Servo myservo;  // create servo object to control a servo
-    #define NoMoove 1486
+    #define NoMoove 1484
     #define FULLSPEEDLEFT 2500
 
     unsigned long timing; 

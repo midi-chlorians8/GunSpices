@@ -34,7 +34,7 @@ public:
                 if(startButton.ButtonRead() == true){   tumblerMode.SetModeEnded(false);
                     
 
-                    if(servoLf20.Moove60Degrees(260)==true and Klapan.KlapanOpenSingl(400)==true){
+                    if(servoLf20.Moove60Degrees(300)==true and Klapan.KlapanOpenSingl(400)==true){
                         startButton.RebootButtonRead();
 
                         servoLf20.Moove60DegreesReset();  Klapan.KlapanOpenResetSingl();

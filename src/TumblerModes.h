@@ -16,13 +16,13 @@ public:
         if(lastModeIsEnded == true){
 
               //Читаем аналоговый порт
-              if(analogRead(A0) > 1000){
+              if(analogRead(A0) > 900){
                 mode = SINGL;
               }
               if(analogRead(A0) < 100){
                 mode = AUTO;
               }
-               if(analogRead(A0) > 100 and analogRead(A0) < 1000 ){
+               if(analogRead(A0) > 100 and analogRead(A0) < 900 ){
                 mode = REFILL;
               }
         }
