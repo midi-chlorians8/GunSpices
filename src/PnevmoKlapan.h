@@ -13,7 +13,7 @@ public:
         pinMode(Klapan_PIN,OUTPUT);
         digitalWrite(Klapan_PIN,LOW);
     }
-        bool KlapanOpenSingl(uint16_t millisec){ // 200 mc
+    bool KlapanOpenSingl(uint16_t millisec){ // 200 mc
 
         if(oneTimeKlapanOpen == false){ // Один раз
             // Один раз замерять текущее время
@@ -39,6 +39,7 @@ public:
     void KlapanOpenResetSingl(){
             oneMeasuring = false;
             oneTimeKlapanOpen = false;
+            digitalWrite(Klapan_PIN,LOW);
     }
 
 };

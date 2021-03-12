@@ -10,6 +10,7 @@ private:
       bool lastModeIsEnded = true;
 public:
     TumblerModes(){
+        //lcd.clear();
     }
     void ReadTumblerModes(){ //! Новый мод не должен начатся пока не закончился старый
         //Если прошлый режим завершился
@@ -25,6 +26,7 @@ public:
                if(analogRead(A0) > 100 and analogRead(A0) < 900 ){
                 mode = REFILL;
               }
+       
         }
         
     }
