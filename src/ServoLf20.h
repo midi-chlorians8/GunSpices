@@ -9,6 +9,7 @@ class ServoLf20{
     Servo myservo;  // create servo object to control a servo
     #define NoMoove 1484
     #define FULLSPEEDLEFT 2000
+    #define FULLSPEEDRIGHT 1000
     //300ms =60^
     unsigned long timing; 
     bool oneMeasuring = false;
@@ -22,14 +23,14 @@ class ServoLf20{
         myservo.writeMicroseconds(NoMoove);
     }
     
-    bool MooveDegrees(uint16_t millisec){ // 200 mc
+    bool MooveDegrees(unsigned long millisec){ // 200 mc
 
         if(oneTimeMoove60 == false){ // Один раз
             // Один раз замерять текущее время
             if(oneMeasuring == false){
-                    myservo.writeMicroseconds(FULLSPEEDLEFT );
-                    timing = millis();
-                    oneMeasuring = true;
+                myservo.writeMicroseconds(FULLSPEEDLEFT);
+                timing = millis();
+                oneMeasuring = true;
             }
             // Как чуть прокрутилось - остановить
             if (millis() - timing > millisec and oneMeasuring == true){  // if (millis() - timing > 200 and oneMeasuring == true){
@@ -52,7 +53,7 @@ class ServoLf20{
             return false;
         }
     }
-    void Moove60DegreesReset(){
+    void MooveDegreesReset(){
             oneMeasuring = false;
             oneTimeMoove60 = false;
     }
@@ -64,8 +65,18 @@ class ServoLf20{
         myservo.writeMicroseconds(NoMoove );
     }
 
-    void SimpleManagement(int freq){ // ДЕБАГ
+    void SimpleManagement(int freq){ // ДЕБАГ ввод с клавы
         myservo.writeMicroseconds(freq );
+    }
+    void MooveRightOneDegrees(){
+        myservo.writeMicroseconds(FULLSPEEDRIGHT + 400); 
+        delay(30);
+        myservo.writeMicroseconds(NoMoove ); 
+    }
+    void MooveLeftOneDegrees(){
+        myservo.writeMicroseconds(FULLSPEEDLEFT - 500); 
+        delay(30);
+        myservo.writeMicroseconds(NoMoove ); 
     }
 
 };
