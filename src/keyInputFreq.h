@@ -1,8 +1,10 @@
 #pragma once
 #include <Arduino.h>
+#include "MyStepper.h"
 
-void keyInputFreq(){
+int keyInputFreq(MyStepper& myStepper){
     static String inString = "";    // string to hold input
+static int valInput=0;
     while (Serial.available() > 0) {
         byte inChar = Serial.read();
         if (isDigit(inChar)) {
@@ -14,10 +16,12 @@ void keyInputFreq(){
           Serial.print(F("Value:"));      Serial.println(inString.toInt());
           //Serial.print(F("String: "));    Serial.println(inString);
 
-          MyServoLf20Ptr->SimpleManagement(inString.toInt());
+         //  myStepper.SimpleManagement(inString.toInt());
+         valInput = inString.toInt();
           //myservo.writeMicroseconds(inString.toInt() );
           // clear the string for new input:
           inString = "";
         }
     }
+ return valInput ;
 }

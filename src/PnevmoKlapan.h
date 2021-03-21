@@ -36,6 +36,36 @@ public:
         }
         
     }
+
+
+    bool KlapanOpenSinglNoON(uint16_t millisec){ // 200 mc
+
+        if(oneTimeKlapanOpen == false){ // Один раз
+            // Один раз замерять текущее время
+            if(oneMeasuring == false){
+                    //digitalWrite(Klapan_PIN,HIGH);
+                    timing = millis();
+                    oneMeasuring = true;
+            }
+            // Как чуть прокрутилось - остановить
+            if (millis() - timing > millisec and oneMeasuring == true){  // if (millis() - timing > 200 and oneMeasuring == true){
+                    //digitalWrite(Klapan_PIN,LOW);
+                    oneTimeKlapanOpen = true;
+            }
+
+        }                            // Один раз
+        if(oneTimeKlapanOpen == true){
+            return true;
+        }else{
+            return false;
+        }
+        
+    }
+
+
+
+
+
     void KlapanOpenResetSingl(){
             oneMeasuring = false;
             oneTimeKlapanOpen = false;

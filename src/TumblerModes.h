@@ -14,6 +14,7 @@ public:
     }
     void ReadTumblerModes(){ //! Новый мод не должен начатся пока не закончился старый
         //Если прошлый режим завершился
+ 
         if(lastModeIsEnded == true){
 
               //Читаем аналоговый порт
@@ -21,10 +22,10 @@ public:
                 mode = SINGL;
               }
               if(analogRead(A0) < 100){
-                mode = AUTO;
+                mode = REFILL;
               }
                if(analogRead(A0) > 100 and analogRead(A0) < 900 ){
-                mode = REFILL;
+                mode = AUTOO;
               }
        
         }

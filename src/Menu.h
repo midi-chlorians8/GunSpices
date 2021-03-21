@@ -1,6 +1,7 @@
 #pragma once
 #include <Arduino.h>
 
+#include "MyStepper.h"
 #include "GyverEncoder.h"
 
 // Дисплей
@@ -91,7 +92,7 @@ public:
             pressed = !pressed;
         }
     }
-    void Draw(ServoLf20& servoLf20,TumblerModes& tumblerMode){
+    void Draw(MyStepper& myStepper,TumblerModes& tumblerMode,ETypePosition tp){
         IntroDisplay(); // Один раз при старте вывести заставку
         if(menuLayer == 0){
 
@@ -122,10 +123,6 @@ public:
 
 
 
-
-
-
-
             if (cursorPos == 1 and pressed == false){
                    
 
@@ -144,30 +141,43 @@ public:
             }
             if (cursorPos == 1 and pressed == true){
                 cursorPos=0; // Чтоб показало что серва стоит в нуле
-
+                //tumblerMode.SetModeEnded(false);
                 while(pressed != false){
                     RotaryRightRead();
-                    RotaryLeftRead();
+                    RotaryLeftRead(); 
 
+                    myStepper.UpdateStepper();
+                    myStepper.MooveStep();
                     if (old_cursorPos != cursorPos){
 
                         lcd.clear();
                         lcd.setCursor(0, 1);lcd.print(F(">"));
-                        lcd.setCursor(1, 1);lcd.print(cursorPos);
+                        lcd.setCursor(1, 1);lcd.print(myStepper.ReturnCurrentDegPos());lcd.print(F("^"));
+                        //lcd.setCursor(6, 1);lcd.print("CurPos"); lcd.setCursor(12, 1);lcd.print(cursorPos);
+                        
 
                         if(cursorPos > old_cursorPos){
-                             Serial.println("->");
-                             servoLf20.MooveRightOneDegrees();
+                             Serial.println("->");//myStepper.UpdateStepper();
+                             //myStepper.SetPlusNewAngle( cursorPos  ); myStepper.MooveDegreesReset();  
+                             myStepper.SetJustNewAngleR( (cursorPos) );myStepper.MooveDegreesReset();  
+                            // myStepper.SetJustNewAngle(cursorPos);  myStepper.MooveDegreesReset();  
+                             //myStepper.MooveRightOneStep();
+                             //servoLf20.MooveRightOneDegrees();
                         }else{
                              Serial.println("<-");
-                             servoLf20.MooveLeftOneDegrees();
+                             //myStepper.UpdateStepper();
+                             myStepper.SetJustNewAngleL( (cursorPos) ); myStepper.MooveDegreesReset();  
+                            // servoLf20.MooveLeftOneDegrees();
                         }
 
                         old_cursorPos = cursorPos;
-                        
+                          
+                    //myStepper.MooveRightOneStep();
                     }
+                 
                     // Если нажат энкодер то выйти
-                    if (enc1.isPress()){  pressed = !pressed; oneRazDraw1 = false; cursorPos=1;needRefresh = true; } //Serial.println(F("Press"));         // нажатие на кнопку (+ дебаунс)
+                    if (enc1.isPress()){  pressed = !pressed; oneRazDraw1 = false; cursorPos=1;needRefresh = true; //tumblerMode.SetModeEnded(true);
+                    } //Serial.println(F("Press"));         // нажатие на кнопку (+ дебаунс)
                     
                 }
             //delay(500);
